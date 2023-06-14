@@ -8,7 +8,7 @@ function Header() {
         <img src={logo} alt="" className="header-logo-img" />
       <h2>Meme Generator</h2>
         </div>
-      <h4>React Course - Project 3</h4>
+      <h4></h4>
     </header>
   );
 }

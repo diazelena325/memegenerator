@@ -1,16 +1,57 @@
 import React from 'react'
-import memesData from '../memesData.js'
+
 
 function Meme() {
-  const [allMemeImages, setAllMemeImages] = React.useState(memesData)
+    const [meme, setMeme] = React.useState(
+        { topText: "", 
+         bottomText: "", 
+         randomImage: "http://i.imgflip.com/1bij.jpg"
+        }
+     )
+
+  const [allMemeImages, setAllMemeImages] = React.useState([])
   //const [memeImage, setMemeImage] = React.useState("http://i.imgflip.com/1bij.jpg")
-  const [meme, setMeme] = React.useState(
-     { topText: "", 
-      bottomText: "", 
-      randomImage: "http://i.imgflip.com/1bij.jpg"
-     }
-  )
+ 
   
+ //fetch version:
+/* fetch("https://api.imgflip.com/get_memes")
+    .then(res => res.json())
+    .then(data => setAllMemeImages(data.data.memes)) 
+  */
+
+//did not like this async version:
+/*
+React.useEffect(async () => {
+        const res = await fetch("https://api.imgflip.com/get_memes")
+        const data = await res.json()
+        setAllMemes(data.data.memes)
+    }, [])
+*/
+
+//had to do it this way
+  React.useEffect(() => {
+    async function fetchData(){
+        const res = await fetch("https://api.imgflip.com/get_memes")
+        const data = await res.json()
+        setAllMemeImages(data.data.memes)
+    }
+   fetchData()
+    }, [])
+
+    function getMemeImage() {
+       
+        const randomNumber = Math.floor(Math.random() * allMemeImages.length)
+        const url = allMemeImages[randomNumber].url
+        setMeme(prevMeme => {
+          return {
+             ...prevMeme,
+             randomImage: url
+         }
+     }
+     )  
+        
+    }
+
   function handleChange(event){
     const {name, value} = event.target
     
@@ -23,19 +64,7 @@ function Meme() {
     
 }
 
-    function getMemeImage() {
-        const memesArray = allMemeImages.data.memes
-        const randomNumber = Math.floor(Math.random() * memesArray.length)
-        const url = memesArray[randomNumber].url
-        setMeme(prevMeme => {
-          return {
-             ...prevMeme,
-             randomImage: url
-         }
-     }
-     )  
-        
-    }
+    
 
   return (
    <div className='meme-form'>
